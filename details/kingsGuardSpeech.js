@@ -167,6 +167,29 @@ const kingsGuardsSpeech = [
             },
         ]
     },
-
+    {
+        wave: 7,
+        monsterName: "minotaur",
+        speech: [
+            {
+                name: "General",
+                isLeft: true,
+                imageDirectory: "./images/general.png",
+                message: "Well Fought Captain"
+            },
+            {
+                name: "General",
+                isLeft: true,
+                imageDirectory: "./images/general.png",
+                message: "The king is grateful"
+            },
+            {
+                name: "General",
+                isLeft: true,
+                imageDirectory: "./images/general.png",
+                message: "It won't be long before we accomplish our goal"
+            }
+        ]
+    },
 ]
 export default kingsGuardsSpeech
