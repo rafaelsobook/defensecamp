@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Defense Camp Game</title>
+    <link rel="stylesheet" href="./styles/style.css">
+</head>
+<body>
+    <canvas></canvas>
+    <div class="loading-screen loading-off">
+        <p class="loading-cap">Loading Battle Field ...</p>
+    </div>
+    <div class="wave-container">
+        <p id="waveTitle" class="caption">Next Wave</p>
+        <p id="waveCount" class="caption">0:0:0</p>
+    </div>
+
+    <button class="recruit-idle-btn">Recruits</button>
+    <ul class="recruit-container isHiding">
+        <p id="totalKills" class="caption" style="margin-bottom: 20px;">Total kills: </p>
+        <li id="gladiator" class="list">
+            <p class="pawn-name">Gladiator</p>
+            <img class="pawn-img" src="./images/gladiator.png" alt="">
+        </li>
+        <li id="warrior" class="list">
+            <p class="pawn-name">Warrior</p>
+            <img class="pawn-img" src="./images/warrior.png" alt="">
+        </li>
+        <li id="commander" class="list">
+            <p class="pawn-name">Commander</p>
+            <img class="pawn-img" src="./images/commander.png" alt="">
+        </li>
+        <button class="close-recruits">cancel</button>
+    </ul>
+    <p class="popup-message pop-hide">warning</p>
+    <button id="start" class="home-btn">start</button>
+<script src="./index.js" type="module"></script>
+</body>
+</html>
