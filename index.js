@@ -7,6 +7,7 @@ import warriors from "./details/warriorDet.js"
 import recruitsInfo from "./details/recruitInfo.js"
 import kingsGuardsSpeech from "./details/kingsGuardSpeech.js"
 
+
 const conversation = new Conversation(document, 50)
 const canvas = document.querySelector("canvas")
 const startBtn = document.getElementById("start")
@@ -23,6 +24,7 @@ const totalKills = document.getElementById("totalKills")
 const popupMessage = document.querySelector(".popup-message")
 // loading screen
 const loadingCont = document.querySelector(".loading-screen")
+const loadingCap = document.querySelector(".loading-cap")
 const log = console.log
 
 const { Engine, Scene, Vector3, MeshBuilder,
@@ -125,9 +127,10 @@ class Game{
     openGameUI(){
         recruitBtn.style.display = "block"
     }
-    openLoadingScreen(){
+    openLoadingScreen(loadingText){
         loadingCont.classList.remove("loading-off")
-        loadingCont.style.display = "block"        
+        loadingCont.style.display = "block"       
+        loadingCap.innerHTML = loadingText ? loadingText : "Loading Battle Field ..."
     }
     hideLoadingScreen(){
         loadingCont.classList.add("loading-off")
@@ -183,6 +186,7 @@ class Game{
         })
     }
     async _HomePage(){
+        this.openLoadingScreen("Loading ...")
         this.closeGameUI()
         const homeScene = new Scene(this._engine)
 
@@ -207,6 +211,7 @@ class Game{
         await homeScene.whenReadyAsync()
         this._currentScene.dispose()
         this._currentScene = homeScene
+        this.hideLoadingScreen()
 
         startBtn.style.display="block"
         startBtn.addEventListener("click", async () => {
@@ -332,7 +337,7 @@ class Game{
             
         })
 
-        this.goingUpMeshes.forEach(mesh => mesh.locallyTranslate(new Vector3(0,7 * detlaT,0)))
+        this.goingUpMeshes.forEach(mesh => mesh.locallyTranslate(new Vector3(0,5 * detlaT,0)))
     }
     implementPicking(scene, cam){
         scene.onPointerDown = () =>{
@@ -776,8 +781,9 @@ class Game{
         body.lookAt(new Vector3(targPos.x,1,targPos.z),0,0,0)
         this.registerCollisions()
     }
-    createTextMesh(textToDisplay, color, scene, theParent){
-        const nameMesh = Mesh.CreatePlane("textToDisplay", 4, scene);        
+    createTextMesh(textToDisplay, color, scene, theParent, isGoingUp){
+        const nameId = `text${makeRandNum()}${makeRandNum()}`
+        const nameMesh = Mesh.CreatePlane(nameId, 4, scene);        
         nameMesh.billboardMode = Mesh.BILLBOARDMODE_ALL;
         const textureForName = GUI.AdvancedDynamicTexture.CreateForMesh(nameMesh);
         nameMesh.isPickable = false
@@ -791,8 +797,19 @@ class Game{
         text1.width = 100
         text1.background = "red"
         textureForName.addControl(text1);    
+        if(isGoingUp){
+            nameMesh.position = theParent.position
+            this.goingUpMeshes.push(nameMesh)
+            nameMesh.isVisible = true
+            setTimeout(() => {
+                this.goingUpMeshes = this.goingUpMeshes.filter(mesh => mesh.name !== nameId)
+                nameMesh.dispose()
+            }, 2000)
+            return nameMesh
+        }  
         nameMesh.parent = theParent
-        nameMesh.position = new Vector3(0,1.5,0)        
+        nameMesh.position = new Vector3(0,1.5,0) 
+     
         return nameMesh
     }
     createLifeBar(parent, hp, maxHp, scene, posY){
@@ -982,7 +999,7 @@ class Game{
                 ourCurrentPawn.slashSound.play()
                 currentEnemy.hp -= ourCurrentPawn.dmg
                 currentEnemy.lifebarUi.width = `${(currentEnemy.hp/currentEnemy.maxHp)*100 * 2}px`
-                
+                this.createTextMesh(`${ourCurrentPawn.dmg}`, "red", this._currentScene, currentEnemy.body, true)
                 if(currentEnemy.hp <= 0) this.enemyDied(currentEnemy)                            
             }))
 
